@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 
@@ -34,9 +35,14 @@ public class MainWindowController {
     @FXML
     Button button_hw_stop;
 
+    @FXML
+    CheckBox forward_checkbox;
+
+
     public void initialize(){
         //get a list of devices
         setupUi();
+
     }
 
     private void setupUi(){
@@ -54,23 +60,12 @@ public class MainWindowController {
     }
 
     private void setupListeners(){
-        hw_endpoint_output.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MidiDevice.Info>() {
-            @Override
-            public void changed(ObservableValue<? extends MidiDevice.Info> observable, MidiDevice.Info oldValue, MidiDevice.Info newValue) {
-                ///only change the device if none has been selected
-                if (oldValue == null){
-                    try {
-                        MidiDevice device = MidiSystem.getMidiDevice(newValue);
-                        Transmitter transmitter = device.getTransmitter();
-                        transmitter.setReceiver(InOutDirector.GetHardwareEndpoint());
-                        InOutDirector.GetResourcesToClose().add(device);
-                        device.open();
-                    } catch (MidiUnavailableException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+        forward_checkbox.selectedProperty().addListener(new ChangeListener<Boolean>(){
 
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+            }
         });
 
         hw_endpoint_input.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MidiDevice.Info>() {
@@ -91,6 +86,65 @@ public class MainWindowController {
             }
 
         });
+
+        hw_endpoint_output.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MidiDevice.Info>() {
+            @Override
+            public void changed(ObservableValue<? extends MidiDevice.Info> observable, MidiDevice.Info oldValue, MidiDevice.Info newValue) {
+                ///only change the device if none has been selected
+                if (oldValue == null){
+                    try {
+                        MidiDevice device = MidiSystem.getMidiDevice(newValue);
+                        Transmitter transmitter = device.getTransmitter();
+                        transmitter.setReceiver(InOutDirector.GetHardwareEndpoint());
+                        InOutDirector.GetResourcesToClose().add(device);
+                        device.open();
+                    } catch (MidiUnavailableException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        });
+
+        sw_endpoint_input.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MidiDevice.Info>() {
+            @Override
+            public void changed(ObservableValue<? extends MidiDevice.Info> observable, MidiDevice.Info oldValue, MidiDevice.Info newValue) {
+                ///only change the device if none has been selected
+                if (oldValue == null){
+                    try {
+                        MidiDevice device = MidiSystem.getMidiDevice(newValue);
+                        Receiver receiver = device.getReceiver();
+                        InOutDirector.GetSoftwareEndpoint().setReceiver(receiver);
+                        InOutDirector.GetResourcesToClose().add(device);
+                        device.open();
+                    } catch (MidiUnavailableException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        });
+
+        sw_endpoint_output.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MidiDevice.Info>() {
+            @Override
+            public void changed(ObservableValue<? extends MidiDevice.Info> observable, MidiDevice.Info oldValue, MidiDevice.Info newValue) {
+                ///only change the device if none has been selected
+                if (oldValue == null){
+                    try {
+                        MidiDevice device = MidiSystem.getMidiDevice(newValue);
+                        Transmitter transmitter = device.getTransmitter();
+                        transmitter.setReceiver(InOutDirector.GetSoftwareEndpoint());
+                        InOutDirector.GetResourcesToClose().add(device);
+                        device.open();
+                    } catch (MidiUnavailableException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        });
+
+
     }
 
     private void setCellFactory(ListView listView){

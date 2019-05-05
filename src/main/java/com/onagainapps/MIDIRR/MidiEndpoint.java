@@ -1,9 +1,10 @@
 package com.onagainapps.MIDIRR;
 import javax.sound.midi.*;
+import java.util.ArrayList;
 
 public class MidiEndpoint implements Receiver, Transmitter {
 
-    private Receiver receiver;
+    private ArrayList<Receiver> receivers;
     private boolean transmitAllMidiToReceiver = true;
 
     public MidiEndpoint(){
@@ -14,20 +15,27 @@ public class MidiEndpoint implements Receiver, Transmitter {
     public void send(MidiMessage message, long timeStamp) {
         System.out.println(message.getMessage());
         if (transmitAllMidiToReceiver){
-            if (receiver != null){
-                receiver.send(message, timeStamp);
+            if (receivers != null){
+                for (Receiver r:receivers) {
+                    r.send(message, timeStamp);
+                }
             }
         }
     }
 
     @Override //transmitter override
     public void setReceiver(Receiver receiver) {
-        this.receiver = receiver;
+        //just add the receiver
+        if (receivers == null){
+            receivers = new ArrayList<>();
+        }
+        receivers.add(receiver);
     }
 
     @Override //transmitter override
     public Receiver getReceiver() {
-        return this.receiver;
+        //todo figure out what to do here
+        return this.receivers.get(0);
     }
 
     @Override

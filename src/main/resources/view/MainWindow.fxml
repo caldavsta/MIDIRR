@@ -15,7 +15,7 @@
       <ListView fx:id="sw_endpoint_output" layoutX="398.0" layoutY="323.0" prefHeight="200.0" prefWidth="200.0" />
       <Button fx:id="button_hw_start" layoutX="40.0" layoutY="537.0" mnemonicParsing="false" text="Start" />
       <Button fx:id="button_sw_stop" layoutX="557.0" layoutY="537.0" mnemonicParsing="false" text="Stop" />
-      <CheckBox layoutX="290.0" layoutY="214.0" mnemonicParsing="false" text="CheckBox" />
+      <CheckBox layoutX="290.0" layoutY="214.0" mnemonicParsing="false" text="Foward" />
       <Button fx:id="button_hw_stop" layoutX="199.0" layoutY="537.0" mnemonicParsing="false" text="Stop" />
       <Button fx:id="button_sw_start" layoutX="398.0" layoutY="537.0" mnemonicParsing="false" text="Start" />
       <Label layoutX="40.0" layoutY="35.0" text="Hardware Endpoints">
