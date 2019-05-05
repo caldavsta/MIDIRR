@@ -1,13 +1,54 @@
 package com.onagainapps.MIDIRR;
 
-import javax.sound.midi.MidiDevice;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Transmitter;
+import javax.sound.midi.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InOutDirector {
+
+    public static void CloseAllResources(){
+        for (AutoCloseable autoCloseable : resourcesToClose){
+            try {
+                autoCloseable.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static ArrayList<AutoCloseable> resourcesToClose;
+    public static ArrayList<AutoCloseable> GetResourcesToClose()
+    {
+        if (resourcesToClose == null)
+            resourcesToClose = new ArrayList<AutoCloseable>();
+
+        return resourcesToClose;
+    }
+
+    private static MidiEndpoint _hardwareEndpoint;
+    private static MidiEndpoint _softwareEndpoint;
+    public static MidiEndpoint GetHardwareEndpoint()
+    {
+        if (_hardwareEndpoint == null)
+            _hardwareEndpoint = new MidiEndpoint();
+
+        return _hardwareEndpoint;
+    }
+
+    public static MidiEndpoint GetSoftwareEndpoint()
+    {
+        if (_softwareEndpoint == null)
+            _softwareEndpoint = new MidiEndpoint();
+
+        return _softwareEndpoint;
+    }
+
+
+    public static MidiDevice GetDeviceByInfo(MidiDevice.Info info) throws MidiUnavailableException {
+        MidiDevice result;
+        result = MidiSystem.getMidiDevice(info);
+        return result;
+    }
 
     public static MidiDevice.Info[] GetDevicesThatHaveTransmitters() throws MidiUnavailableException {
         MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();

@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/view/MainWindow.fxml"));
@@ -21,5 +22,11 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void stop(){
+        System.out.println("Attempting to Close All Closeable Resources");
+        InOutDirector.CloseAllResources();
     }
 }
