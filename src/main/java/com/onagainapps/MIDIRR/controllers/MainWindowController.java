@@ -21,22 +21,12 @@ public class MainWindowController {
     ListView hw_endpoint_input;
     @FXML
     ListView hw_endpoint_output;
-    @FXML
-    ListView sw_endpoint_input;
-    @FXML
-    ListView sw_endpoint_output;
 
     @FXML
-    Button button_sw_start;
+    Button button_rec_start;
     @FXML
-    Button button_sw_stop;
-    @FXML
-    Button button_hw_start;
-    @FXML
-    Button button_hw_stop;
+    Button button_rec_stop;
 
-    @FXML
-    CheckBox forward_checkbox;
 
 
     public void initialize(){
@@ -49,8 +39,6 @@ public class MainWindowController {
         setupListeners();
         setCellFactory(hw_endpoint_input);
         setCellFactory(hw_endpoint_output);
-        setCellFactory(sw_endpoint_input);
-        setCellFactory(sw_endpoint_output);
 
         try {
             refreshDeviceListViews();
@@ -60,13 +48,11 @@ public class MainWindowController {
     }
 
     private void setupListeners(){
-        forward_checkbox.selectedProperty().addListener(new ChangeListener<Boolean>(){
-
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-
-            }
-        });
+        //forward_checkbox.selectedProperty().addListener(new ChangeListener<Boolean>(){
+        //    @Override
+        //   public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+        //    }
+        //});
 
         hw_endpoint_input.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MidiDevice.Info>() {
             @Override
@@ -106,43 +92,6 @@ public class MainWindowController {
 
         });
 
-        sw_endpoint_input.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MidiDevice.Info>() {
-            @Override
-            public void changed(ObservableValue<? extends MidiDevice.Info> observable, MidiDevice.Info oldValue, MidiDevice.Info newValue) {
-                ///only change the device if none has been selected
-                if (oldValue == null){
-                    try {
-                        MidiDevice device = MidiSystem.getMidiDevice(newValue);
-                        Receiver receiver = device.getReceiver();
-                        InOutDirector.GetSoftwareEndpoint().setReceiver(receiver);
-                        InOutDirector.GetResourcesToClose().add(device);
-                        device.open();
-                    } catch (MidiUnavailableException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-        });
-
-        sw_endpoint_output.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MidiDevice.Info>() {
-            @Override
-            public void changed(ObservableValue<? extends MidiDevice.Info> observable, MidiDevice.Info oldValue, MidiDevice.Info newValue) {
-                ///only change the device if none has been selected
-                if (oldValue == null){
-                    try {
-                        MidiDevice device = MidiSystem.getMidiDevice(newValue);
-                        Transmitter transmitter = device.getTransmitter();
-                        transmitter.setReceiver(InOutDirector.GetSoftwareEndpoint());
-                        InOutDirector.GetResourcesToClose().add(device);
-                        device.open();
-                    } catch (MidiUnavailableException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-        });
 
 
     }
@@ -164,8 +113,6 @@ public class MainWindowController {
     private void setListViewsDisable(Boolean disabled){
         hw_endpoint_input.setDisable(disabled);
         hw_endpoint_output.setDisable(disabled);
-        sw_endpoint_input.setDisable(disabled);
-        sw_endpoint_output.setDisable(disabled);
     }
 
     private void refreshDeviceListViews() throws MidiUnavailableException {
@@ -178,9 +125,7 @@ public class MainWindowController {
                 InOutDirector.GetDevicesThatHaveTransmitters()
         );
         hw_endpoint_input.setItems(devicesWithRecievers);
-        sw_endpoint_input.setItems(devicesWithRecievers);
         hw_endpoint_output.setItems(devicesWithTransmitters);
-        sw_endpoint_output.setItems(devicesWithTransmitters);
     }
 
     public static ObservableList<MidiDevice.Info> GetObservableInfoListFromArray(MidiDevice.Info[] infos){
